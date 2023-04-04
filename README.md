@@ -3,6 +3,15 @@ Allow trailing commas and comments in JSON in Go
 
 [![Go reference](https://pkg.go.dev/badge/github.com/andreyvit/jsonfix.svg)](https://pkg.go.dev/github.com/andreyvit/jsonfix) ![Zero dependencies](https://img.shields.io/badge/deps-zero-brightgreen) ![under 100 LOC](https://img.shields.io/badge/size-%3C100%20LOC-green) ![100% coverage](https://img.shields.io/badge/coverage-100%25-green) [![Go Report Card](https://goreportcard.com/badge/github.com/andreyvit/jsonfix)](https://goreportcard.com/report/github.com/andreyvit/jsonfix)
 
+```json5
+// Comments are allowed
+{
+    "FOO": [1, 2, 3,], // trailing comma in array
+    "BAR": 24,  // trailing comma in object
+}
+// only line comments are supported, not /* ... */ ones
+````
+
 
 Why?
 ----
@@ -12,7 +21,7 @@ Fixes annoying problems with manually-written JSON in Go:
 * lack of trailing commas,
 * lack of comments.
 
-Why this library: it's a tiny JSON preprocessor, allowing to use standard `encoding/json`. No code duplication, no missing features (e.g. .DisallowUnknownFields()), no surprises.
+Why this library: it's a tiny JSON preprocessor, allowing to use standard `encoding/json`. No code duplication, no missing features (e.g. `DisallowUnknownFields`), no surprises.
 
 
 Usage
