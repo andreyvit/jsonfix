@@ -65,6 +65,14 @@ We recommend [modd](https://github.com/cortesi/modd) (`go install github.com/cor
 Maintain 100% coverage. It's not often the right choice, but it is for this library.
 
 
+Changelog
+---------
+
+* 1.1.0 (2025-01-27): Added bare keys and block comments.
+
+* 1.0.0 (2023-04-04): Initial release supporting trailing commas and line comments.
+
+
 MIT license
 -----------
 
