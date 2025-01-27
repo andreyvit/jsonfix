@@ -1,13 +1,14 @@
-Allow trailing commas and comments in JSON in Go
-================================================
+Allow trailing commas, comments and bare keys in JSON in Go
+===========================================================
 
-[![Go reference](https://pkg.go.dev/badge/github.com/andreyvit/jsonfix.svg)](https://pkg.go.dev/github.com/andreyvit/jsonfix) ![Zero dependencies](https://img.shields.io/badge/deps-zero-brightgreen) ![under 100 LOC](https://img.shields.io/badge/size-%3C100%20LOC-green) ![100% coverage](https://img.shields.io/badge/coverage-100%25-green) [![Go Report Card](https://goreportcard.com/badge/github.com/andreyvit/jsonfix)](https://goreportcard.com/report/github.com/andreyvit/jsonfix)
+[![Go reference](https://pkg.go.dev/badge/github.com/andreyvit/jsonfix.svg)](https://pkg.go.dev/github.com/andreyvit/jsonfix) ![Zero dependencies](https://img.shields.io/badge/deps-zero-brightgreen) ![under 150 LOC](https://img.shields.io/badge/size-%3C100%20LOC-green) ![100% coverage](https://img.shields.io/badge/coverage-100%25-green) [![Go Report Card](https://goreportcard.com/badge/github.com/andreyvit/jsonfix)](https://goreportcard.com/report/github.com/andreyvit/jsonfix)
 
 ```json5
 // Comments are allowed
 {
-    "FOO": [1, 2, 3,], // trailing comma in array
-    "BAR": 24,  // trailing comma in object
+    "FOO": [1, 2, 3,], // trailing comma in an array
+    BAR: 42,           // unquoted property name
+    "BOZ": 24,         // trailing comma in an object
 }
 // only line comments are supported, not /* ... */ ones
 ````
@@ -20,6 +21,8 @@ Fixes annoying problems with manually-written JSON in Go:
 
 * lack of trailing commas,
 * lack of comments.
+
+We also support bare property names. You can use those for convenience, but the primary motivation is that if you feed JSON through one of those newfangled modern JS formatters, they will often unquote the keys, which is very annoying in some cases.
 
 Why this library: it's a tiny JSON preprocessor, allowing to use standard `encoding/json`. No code duplication, no missing features (e.g. `DisallowUnknownFields`), no surprises.
 
@@ -43,7 +46,6 @@ We preserve line numbers when preprocessing.
 TODO
 ----
 
-- [ ] allow unquoted property names
 - [ ] maybe allow block comments `/* ... */`
 
 
@@ -55,7 +57,7 @@ We accept contributions that:
 * add better documentation and examples;
 * add more tests;
 * fix bugs;
-* implement TODOs with full test coverage. 
+* implement TODOs with full test coverage.
 
 Out of scope (unless you convince us otherwise):
 

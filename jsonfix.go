@@ -13,6 +13,13 @@ func init() {
 	isSpace['\r'] = true
 }
 
+type container byte
+
+const (
+	object container = 0
+	array  container = 1
+)
+
 // Bytes removes trailing commas and comments from JSON data.
 // The result can be json.Unmarshal'ed normally.
 // Assumes valid JSON on input, otherwise might produce invalid output
@@ -25,10 +32,14 @@ func Bytes(data []byte) []byte {
 		inString
 		inStringAfterSlash
 		inLineComment
+		inBareObjectKey
 	)
 	var state int = normal
 	var start int
 	var comma int = -1 // index of undecided comma in result (could be followed by whitespace)
+	var isStartOfKey bool
+	var stackBuf [16]container
+	stack := stackBuf[:0]
 	for i, b := range data {
 		switch state {
 		case inStringAfterSlash:
@@ -44,6 +55,15 @@ func Bytes(data []byte) []byte {
 				start = i
 				state = normal
 			}
+		case inBareObjectKey:
+			if !(isSpace[b] || b == ':' || b == '}' || b == '/') {
+				continue
+			}
+			result = append(result, data[start:i]...)
+			result = append(result, '"')
+			start = i
+			state = normal
+			fallthrough
 		case normal:
 			if isSpace[b] {
 				continue
@@ -59,12 +79,39 @@ func Bytes(data []byte) []byte {
 				}
 				comma = -1
 			}
-			if b == '"' {
+			switch b {
+			case '"':
 				state = inString
-			} else if b == ',' {
+				isStartOfKey = false
+			case ',':
 				result = append(result, data[start:i+1]...)
 				comma = len(result) - 1
 				start = i + 1
+				isStartOfKey = (len(stack) > 0) && (stack[len(stack)-1] == object)
+			case '{':
+				stack = append(stack, object)
+				isStartOfKey = true
+			case '[':
+				stack = append(stack, array)
+				isStartOfKey = false
+			case ']':
+				if len(stack) > 0 && stack[len(stack)-1] == array {
+					stack = stack[:len(stack)-1]
+				}
+				isStartOfKey = false
+			case '}':
+				if len(stack) > 0 && stack[len(stack)-1] == object {
+					stack = stack[:len(stack)-1]
+				}
+				isStartOfKey = false
+			default:
+				if isStartOfKey {
+					result = append(result, data[start:i]...)
+					result = append(result, '"')
+					start = i
+					state = inBareObjectKey
+				}
+				isStartOfKey = false
 			}
 		}
 	}
