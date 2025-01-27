@@ -337,6 +337,40 @@ func Test(t *testing.T) {
 				"null": 11
 			}`,
 		},
+		{
+			name: "block_comments",
+			input: `{
+				/* this is a comment */
+				"foo": 1,
+				"bar": /* inline comment */ 2,
+				/* multi
+				   line
+				   comment */ "baz": 3,
+				"qux": 4 /* trailing comment */
+			}`,
+			expected: `{
+				<NOTHING>
+				"foo": 1,
+				"bar":  2,
+				<NOTHING>
+<NOTHING>
+<NOTHING> "baz": 3,
+				"qux": 4 <NOTHING>
+			}`,
+		},
+		{
+			name: "block_comments_in_strings",
+			input: `{
+				"foo": "/* not a comment */",
+				"bar": "text with /* in the middle",
+				"baz": "ends with /*"
+			}`,
+			expected: `{
+				"foo": "/* not a comment */",
+				"bar": "text with /* in the middle",
+				"baz": "ends with /*"
+			}`,
+		},
 	}
 
 	for _, c := range cases {

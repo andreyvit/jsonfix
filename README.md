@@ -10,7 +10,8 @@ Allow trailing commas, comments and bare keys in JSON in Go
     BAR: 42,           // unquoted property name
     "BOZ": 24,         // trailing comma in an object
 }
-// only line comments are supported, not /* ... */ ones
+/* block comments
+   are supported as well */
 ````
 
 
@@ -43,12 +44,6 @@ json.Unmarshal(jsonfix.Bytes(source), whatever)
 We preserve line numbers when preprocessing.
 
 
-TODO
-----
-
-- [ ] maybe allow block comments `/* ... */`
-
-
 Contributing
 ------------
 
@@ -56,8 +51,7 @@ We accept contributions that:
 
 * add better documentation and examples;
 * add more tests;
-* fix bugs;
-* implement TODOs with full test coverage.
+* fix bugs.
 
 Out of scope (unless you convince us otherwise):
 
@@ -74,4 +68,4 @@ Maintain 100% coverage. It's not often the right choice, but it is for this libr
 MIT license
 -----------
 
-Copyright (c) 2023 Andrey Tarantsov. Published under the terms of the [MIT license](LICENSE).
+Copyright (c) 2023–2025 Andrey Tarantsov. Published under the terms of the [MIT license](LICENSE).

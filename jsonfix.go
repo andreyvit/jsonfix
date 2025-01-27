@@ -32,6 +32,7 @@ func Bytes(data []byte) []byte {
 		inString
 		inStringAfterSlash
 		inLineComment
+		inBlockComment
 		inBareObjectKey
 	)
 	var state int = normal
@@ -55,6 +56,16 @@ func Bytes(data []byte) []byte {
 				start = i
 				state = normal
 			}
+		case inBlockComment:
+			switch b {
+			case '/':
+				if data[i-1] == '*' {
+					start = i + 1
+					state = normal
+				}
+			case '\n':
+				result = append(result, '\n')
+			}
 		case inBareObjectKey:
 			if !(isSpace[b] || b == ':' || b == '}' || b == '/') {
 				continue
@@ -68,10 +79,16 @@ func Bytes(data []byte) []byte {
 			if isSpace[b] {
 				continue
 			}
-			if b == '/' && (i+1 < n) && data[i+1] == '/' {
-				result = append(result, data[start:i]...)
-				state = inLineComment
-				continue
+			if b == '/' && i+1 < n {
+				if data[i+1] == '/' {
+					result = append(result, data[start:i]...)
+					state = inLineComment
+					continue
+				} else if data[i+1] == '*' {
+					result = append(result, data[start:i]...)
+					state = inBlockComment
+					continue
+				}
 			}
 			if comma >= 0 {
 				if b == ']' || b == '}' {
