@@ -51,12 +51,13 @@ We accept contributions that:
 
 * add better documentation and examples;
 * add more tests;
+* improve handling of invalid JSON (we don't know any problems so far, but it hasn't been a huge focus so far);
+* implement single-quoted strings (one could make a case similar to bare keys here, if widespread formatters start preferring single quotes);
 * fix bugs.
 
 Out of scope (unless you convince us otherwise):
 
 * multiline strings
-* single-quoted strings
 * unquoted string values
 * the rest of JSON5
 
