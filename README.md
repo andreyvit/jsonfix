@@ -25,7 +25,7 @@ Fixes annoying problems with manually-written JSON in Go:
 
 We also support bare property names. You can use those for convenience, but the primary motivation is that if you feed JSON through one of those newfangled modern JS formatters, they will often unquote the keys, which is very annoying in some cases.
 
-Why this library: it's a tiny JSON preprocessor, allowing to use standard `encoding/json`. No code duplication, no missing features (e.g. `DisallowUnknownFields`), no surprises.
+Why this library: it's a tiny JSON preprocessor, allowing to use standard `encoding/json`. No code duplication, no missing features (e.g. `DisallowUnknownFields`), no surprises, smooth upgrade path to JSON v2 (won't even require any changes here).
 
 
 Usage
